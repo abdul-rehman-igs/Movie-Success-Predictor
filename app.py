@@ -21,35 +21,69 @@ import os
 from ast import literal_eval
 from datetime import datetime
 
-# Set page config
+# ---- Page config & styling ----
 st.set_page_config(
-    page_title="Movie Success Predictor 🎬",
+    page_title="Movie Success Predictor — Business Dashboard",
     page_icon="🎥",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-# Apply custom CSS for professional theme
-st.markdown("""
+# Global CSS styling
+st.markdown(
+    """
     <style>
-        body {
-            color: #0d0d0d;
-            background-color: #f9f9f9;
-        }
-        .stApp {
-            background-color: #f9f9f9;
-        }
-        h1, h2, h3, h4 {
-            color: #1a1a1a;
-        }
-        .css-18e3th9 {
-            padding: 2rem;
-        }
-        .stSidebar {
-            background-color: #ffffff;
-        }
+    /* Background */
+    .stApp {
+        background: linear-gradient(180deg, #f9fafb 0%, #ffffff 100%);
+        font-family: "Segoe UI", Arial, sans-serif;
+    }
+    /* Global text color */
+    body, .stApp, [class^="css"], [data-testid="stMarkdownContainer"] {
+        color: #1a1a1a !important;
+    }
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+        color: #0f172a !important;
+        font-weight: 600 !important;
+    }
+    /* Sidebar */
+    section[data-testid="stSidebar"] {
+        background-color: #f1f5f9;
+        color: #1a1a1a !important;
+    }
+    /* Metric cards */
+    [data-testid="stMetricValue"] {
+        color: #0f172a !important;
+        font-weight: 700 !important;
+        font-size: 1.3rem !important;
+    }
+    [data-testid="stMetricDelta"] {
+        font-size: 1rem !important;
+    }
+    /* Custom card class */
+    .card {
+        border-radius: 12px;
+        padding: 16px;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        margin-bottom: 20px;
+        color: #1a1a1a !important;
+    }
+    /* Dataframe tables */
+    .stDataFrame {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        color: #1a1a1a !important;
+    }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
+
+# Ensure Plotly charts have white background & dark text
+import plotly.io as pio
+pio.templates.default = "plotly_white"
 
 # Optional shap (won't break if not installed)
 try:
@@ -63,14 +97,6 @@ Path("data/raw").mkdir(parents=True, exist_ok=True)
 Path("data/processed").mkdir(parents=True, exist_ok=True)
 Path("models").mkdir(parents=True, exist_ok=True)
 Path("reports/figures").mkdir(parents=True, exist_ok=True)
-
-# ---- Page config & styling ----
-st.set_page_config(
-    page_title="Movie Success Predictor — Business Dashboard",
-    page_icon="🎥",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
 
 # ---- Utilities ----
 def read_csv_bytes(u):
